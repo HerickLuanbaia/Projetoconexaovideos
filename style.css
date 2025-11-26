@@ -1,0 +1,79 @@
+{
+    box-sizing: boder-box;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f3f6;
+    color: #333;
+    padding: 20px;
+}
+
+h1,h2{
+    color: #1a73e8;
+    margin-bottom: 20px;
+
+}
+
+form{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+    max-width: 500px;
+}
+
+
+input, textarea{
+    font-size: 16px;
+}
+
+button{
+    cursor: pointer;
+    transition: background o.3s ease;
+    margin-right: 16px;
+    background-color: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+}
+button :hover{
+    background-color: #125cc0;
+}
+hr{
+    margin: 40px;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+#videos-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(320px, 1fr));
+    gap:20px;
+}
+
+.video-item{
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    transition: transform 0.2s ease;
+}
+.video-item:hover{
+    20px;
+    transmission
+}
+
+.video-item h3{
+    color: #1a73e8;
+    margin-bottom: 10px;
+}
+
+.video-item p{
+    margin-bottom: 8px;
+    color: #555;
+}
