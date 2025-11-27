@@ -1,98 +1,100 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Videos</title>
-    <link rel="stylesheet" href="../" 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerenciador de Vídeos</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-   <h1>Cadastro de Videos</h1> 
-   <hr />
 
-   <form id="video-form">
-        <input type="text" id="title" placeholder="Título" required>
-        <textarea id="description" placeholder="Descrição" required></textarea>
-        <input type="number" id="duration" placeholder="Duração (min)" required>
-        <button type= "submit" >Cadastro Video</button>
-   </form>
-   <hr />
-   <h2>Lista de videos</h2>
-   <div id="video-container"></div>
+  <h1>Cadastro de Vídeo</h1>
+  <hr />
 
-    <script>
-        const form = document.getElementById('video-form');
-        const container = document.getElementById("video-container")
-        const apiUlr = 'http://localhost:3333/videos'   
+  <form id="video-form">
+    <input type="text" id="title" placeholder="Título" required />
+    <textarea id="description" placeholder="Descrição" required></textarea>
+    <input type="number" id="duration" placeholder="Duração (min)" required />
+    <button type="submit">Cadastrar Vídeo</button>
+  </form>
 
-        async function carregarVideos(){
-            const res = await fetch(apiUlr);
-            const videoss = await res.json();
+  <hr />
 
-            container.innerHTML = '';
+  <h2>Lista de Vídeos</h2>
+  <div id="videos-container">
 
-            await videos.forEach(video => {
-                const card = document.createElement('div');
-                card.className = 'video-item';
-                card.innerHTML = `
-                    <h3>${video.title}</h3>
-                    <p>${video.description} min</p>
-                    <p>Duração: ${video.duration} min</p>
-                    <button onclick='deletarVideo'("${video.id}")'>Excluir</button'
-                    <button onclick="editarVideo('${video.id}','${video.title}','${video.description}', '${video.duration}')"></button>
-                `;
-                container.appendChild(card);
+  </div>
 
-            });
-        }
+  <script>
+    const form = document.getElementById('video-form');
+    const container = document.getElementById('videos-container');
+    const apiUrl = 'http://localhost:3333/videos';
 
-        async function deletarVideo(id) {
-            await fetch(`${apiUlr}/${id}`,{
-                method: 'DELETE'
-            });
-            carregarVideos();
-        }
+    async function carregarVideos() {
+      const res = await fetch(apiUrl);
+      const videos = await res.json();
 
-        form.addEventListener('submit', async(e) => {
-            e.preventDefault();
-            const title = document.getElementById('title').value;
-            const description = document.getElementById('description').value;
-            const duration = document.getElementById('duration').value;
-       
+      container.innerHTML = '';
 
-        await fetch(apiUlr, {
-            method: 'PUT',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify({title, description,duration})
-        });
+      if (!Array.isArray(videos)) return; // garante que seja array
+ 
+      videos.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'video-item';
+        card.innerHTML = `
+          <h3>${video.title}</h3>
+          <p>${video.description}</p>
+          <p>Duração: ${video.duration} min</p>
+          <button onclick='deletarVideo("${video.id}")'>Excluir</button>
+          <button onclick="editarVideo('${video.id}', '${video.title}', '${video.description}', ${video.duration})">Editar</button>
+        `;
+        container.appendChild(card);
+      });
+    }
 
-        form.reset();
-        carregarVideos();
-     });
-     async function editarVideo(id, title, description, duration) {
-        const novoTitulo = prompt("Novo título", title);
-        const novaDescricao = prompt("Nova descrição:",description);
-        const novaDuracao = prompt("Novo Duração:", duration);
+    async function deletarVideo(id) {
+      await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+      carregarVideos();
+    }
 
-        if(!novoTitulo || !novaDescricao || !novaDuracao) return;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const duration = parseInt(document.getElementById('duration').value);
 
-        await fetch(`${apiUlr}/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify({
-                title: novoTitulo,
-                description: novaDescricao,
-                duration: parseInt(novaDuracao)
-            })
-        });
-            carregarVideos();      
-     }
-      
-     carregarVideos();
-    </script>
+      await fetch(apiUrl, {
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, duration })
+      });
+
+      form.reset();
+      carregarVideos();
+    });
+
+    async function editarVideo(id, title, description, duration) {
+      const novoTitulo = prompt("Novo título:", title);
+      const novaDescricao = prompt("Nova descrição:", description);
+      const novaDuracao = prompt("Nova duração (min):", duration);
+
+      if (!novoTitulo || !novaDescricao || !novaDuracao) return;
+
+      await fetch(`${apiUrl}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: novoTitulo,
+          description: novaDescricao,
+          duration: parseInt(novaDuracao)
+        })
+      });
+
+      carregarVideos();
+    }
+
+    carregarVideos();
+  </script>
+
 </body>
 </html>
